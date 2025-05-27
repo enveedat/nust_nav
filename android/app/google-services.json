@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "603164074408",
+    "project_id": "nust-campus-nav-app",
+    "storage_bucket": "nust-campus-nav-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:603164074408:android:b024bf5b229204a6fd3d9d",
+        "android_client_info": {
+          "package_name": "com.enveedat.nust_nav"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPTITbaMn4F5jz3gncDx_IPQ2ChZBr9ps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
