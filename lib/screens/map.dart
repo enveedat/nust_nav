@@ -4,6 +4,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../core/services/database.dart';
 import 'package:geolocator/geolocator.dart';
 
 class CampusMapScreen extends StatefulWidget {
@@ -170,19 +172,7 @@ class _CampusMapScreenState extends State<CampusMapScreen> {
 
   Future<void> _updateUserStats() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) return;
-
-    final userRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(user.uid);
-    final doc = await userRef.get();
-    final data = doc.data() ?? {};
-
-    List<dynamic> visited = List.from(data['placesVisited'] ?? []);
-    if (_searchController.text.isNotEmpty &&
-        !visited.contains(_searchController.text)) {
-      visited.add(_searchController.text);
-    }
+    if (user == null || _selectedDestination == null) return;
 
     final double dist = Geolocator.distanceBetween(
       _currentLocation!.latitude!,
@@ -191,10 +181,15 @@ class _CampusMapScreenState extends State<CampusMapScreen> {
       _selectedDestination!.longitude,
     );
 
-    await userRef.update({
-      'placesVisited': visited,
-      'totalDistance': (data['totalDistance'] ?? 0) + dist,
-    });
+    final locationName = _searchController.text.isNotEmpty
+        ? _searchController.text
+        : (widget.destinationName ?? 'Unknown');
+
+    await DatabaseService.updateUserVisitStats(
+      uid: user.uid,
+      locationName: locationName,
+      distanceTraveled: dist,
+    );
   }
 
   Widget _buildSearchBar() {
